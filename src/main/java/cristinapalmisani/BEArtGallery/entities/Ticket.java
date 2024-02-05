@@ -24,7 +24,6 @@ public class Ticket {
     private String imageDoc;
     @Column(name = "number_people")
     private int numberPerson;
-    private double amount;
     @Enumerated(EnumType.STRING)
     @Column(name = "type_ticket")
     private TypeTicket typeTicket;

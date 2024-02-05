@@ -27,6 +27,7 @@ public class Exhibition extends GeneralAttribute{
     private LocalDate endDate;
     @Column(name = "open_hours")
     private LocalTime openHour;
+    private double amount;
 
     @OneToOne(mappedBy = "exhibition")
     private Location location;
