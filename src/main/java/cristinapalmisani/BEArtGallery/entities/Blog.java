@@ -1,12 +1,11 @@
 package cristinapalmisani.BEArtGallery.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,15 +15,18 @@ import java.util.UUID;
 @Setter
 @Getter
 @ToString
-public class Blog {
+public class Blog extends GeneralAttribute{
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID uuid;
-    private String title;
     private String author;
     private LocalDate date;
-    private String description;
-    private String image;
+
+    @OneToMany(mappedBy = "blog")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Comment> comments;
+
 
 }

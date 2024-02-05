@@ -1,10 +1,12 @@
 package cristinapalmisani.BEArtGallery.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,19 +16,26 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class Exhibition {
+public class Exhibition extends GeneralAttribute{
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID uuid;
-    private String title;
     @Column(name = "start_date")
     private LocalDate startDate;
     @Column(name = "end_date")
     private LocalDate endDate;
-    private String description;
-    private String image;
     @Column(name = "open_hours")
     private LocalTime openHour;
+
+    @OneToOne(mappedBy = "exhibition")
+    private Location location;
+    @ManyToOne
+    @JoinColumn(name = "artist_work_id")
+    private ArtistWork artistWork;
+    @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Ticket> tickets;
 
 }

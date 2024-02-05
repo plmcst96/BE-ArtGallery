@@ -28,5 +28,14 @@ public class Ticket {
     @Enumerated(EnumType.STRING)
     @Column(name = "type_ticket")
     private TypeTicket typeTicket;
+    @ManyToOne
+    @JoinColumn(name = "exhibition_id")
+    private Exhibition exhibition;
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

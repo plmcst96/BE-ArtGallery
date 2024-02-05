@@ -23,4 +23,11 @@ public class Location {
     private String nation;
     @Column(name = "museum_name")
     private String museumName;
+
+    @OneToOne
+    @JoinColumn(name = "artist_work_id")
+    private ArtistWork artistWork;
+    @OneToOne
+    @JoinColumn(name = "exhibition_id")
+    private Exhibition exhibition;
 }

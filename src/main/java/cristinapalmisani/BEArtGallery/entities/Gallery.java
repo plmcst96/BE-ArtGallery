@@ -4,28 +4,27 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "events")
+@Table(name = "gallery")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class Event extends GeneralAttribute{
+public class Gallery {
     @Id
     @GeneratedValue
-    @Setter(AccessLevel.NONE)
     private UUID uuid;
-    private LocalDate date;
-    private TypeEvent typeEvent;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+    @OneToMany(mappedBy = "gallery")
     @ToString.Exclude
     @JsonIgnore
-    private List<Ticket> tickets;
+    private List<ArtistWork> artistWorks;
 
 }

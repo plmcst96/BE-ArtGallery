@@ -29,4 +29,7 @@ public class Artist {
     @Column(name = "image_artist")
     private String imageArtist;
     private String quote;
+
+    @OneToOne(mappedBy = "artist")
+    private Gallery gallery;
 }

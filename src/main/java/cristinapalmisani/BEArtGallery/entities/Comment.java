@@ -22,4 +22,11 @@ public class Comment {
     private LocalDateTime dateTime;
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
+
 }
