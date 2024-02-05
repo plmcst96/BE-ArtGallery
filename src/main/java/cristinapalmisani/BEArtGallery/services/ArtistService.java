@@ -33,7 +33,7 @@ public class ArtistService {
         return artistDAO.save(artist);
     }
 
-    public Page<Artist> getUsers(int page, int size, String sort) {
+    public Page<Artist> getArtist(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return artistDAO.findAll(pageable);
     }

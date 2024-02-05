@@ -22,6 +22,7 @@ public class Event extends GeneralAttribute{
     private UUID uuid;
     private LocalDate date;
     private TypeEvent typeEvent;
+    private double amount;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     @ToString.Exclude

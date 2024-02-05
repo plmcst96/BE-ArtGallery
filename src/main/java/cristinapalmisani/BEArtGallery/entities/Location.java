@@ -19,7 +19,7 @@ public class Location {
     private UUID uuid;
     private String address;
     private String city;
-    private String zipCode;
+    private int zipCode;
     private String nation;
     @Column(name = "museum_name")
     private String museumName;
