@@ -37,7 +37,7 @@ public class AuthService {
             response.put("token", accessToken);
             return response;
         } else {
-            throw new UnauthorizedException("wrong password");
+            throw new UnauthorizedException("wrong password, you have not a correct role");
         }
     }
 
