@@ -3,6 +3,7 @@ package cristinapalmisani.BEArtGallery.controllers;
 import cristinapalmisani.BEArtGallery.config.EmailSender;
 import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataCuratorDTO;
+import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataResponseDTO;
 import cristinapalmisani.BEArtGallery.payloads.user.UserDTO;
 import cristinapalmisani.BEArtGallery.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +68,16 @@ public class UserController {
         userService.deleteById(userId);
     }
 
+    @GetMapping("/{email}/setAccepted")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User putInAccepted(@PathVariable String email){
+        return userService.setAccepted(email);
+    }
+
     @PostMapping("/sendEmailAdmin")
-    public void sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
-        emailSender.sendEmailToAdmin(formDataCuratorDTO);
+    public FormDataResponseDTO sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
+        emailSender.sendEmailToAdmin(formDataCuratorDTO, true);
+        return new FormDataResponseDTO(formDataCuratorDTO.email());
     }
 }
 

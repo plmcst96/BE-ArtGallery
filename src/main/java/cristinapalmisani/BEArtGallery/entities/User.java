@@ -32,6 +32,7 @@ public class User implements UserDetails {
     private String avatar;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private boolean accepted;
 
     @OneToOne(mappedBy = "user")
     private Ticket ticket;

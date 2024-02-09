@@ -2,6 +2,7 @@ package cristinapalmisani.BEArtGallery.services;
 
 import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
+import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataCuratorDTO;
 import cristinapalmisani.BEArtGallery.payloads.user.UserDTO;
 import cristinapalmisani.BEArtGallery.repositories.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +46,9 @@ public class UserService {
         return userDAO.save(user);
     }
 
-
+    public User setAccepted(String email){
+        User curator = userDAO.findByEmail(email).orElseThrow(()-> new NotFoundException("Invalid email"));
+        curator.setAccepted(true);
+        return userDAO.save(curator);
+    }
 }

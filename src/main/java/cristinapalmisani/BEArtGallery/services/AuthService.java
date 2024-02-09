@@ -53,4 +53,17 @@ public class AuthService {
         user.setRole(Role.USER);
         return userDAO.save(user);
     }
+
+    public User registerCurator(UserDTO body) throws IOException {
+        userDAO.findByEmail(body.email()).ifPresent(a -> {
+            throw new BadRequestException("User with email " + a.getEmail() + " already exists");
+        });
+        User user = new User();
+        user.setPassword(bcrypt.encode(body.password()));
+        user.setName(body.name());
+        user.setSurname(body.surname());
+        user.setEmail(body.email());
+        user.setRole(Role.CURATOR);
+        return userDAO.save(user);
+    }
 }

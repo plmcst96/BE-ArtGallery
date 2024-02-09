@@ -40,15 +40,32 @@ public class EmailSender {
         System.out.println(response);
     }
 
-    public void  sendEmailToAdmin(FormDataCuratorDTO formDataCuratorDTO){
+    public void  sendEmailToAdmin(FormDataCuratorDTO formDataCuratorDTO, boolean accepted){
+        if (accepted){
+            String acceptLink = "http://localhost:3001/users/{email}/setAccepted";
+
+            String emailBody = "<p>Your request has been accepted. Please click the button below to proceed:</p>" +
+                    "<a href=\"" + acceptLink + "\"><button style=\"background-color: #4CAF50; /* Green */\n" +
+                    "  border: none;\n" +
+                    "  color: white;\n" +
+                    "  padding: 15px 32px;\n" +
+                    "  text-align: center;\n" +
+                    "  text-decoration: none;\n" +
+                    "  display: inline-block;\n" +
+                    "  font-size: 16px;\n" +
+                    "  margin: 4px 2px;\n" +
+                    "  cursor: pointer;\">Accept Request</button></a>";
+
+
         HttpResponse<JsonNode> response = Unirest.post("https://api.mailgun.net/v3/" + this.mailgunDomainname + "/messages")
                 .basicAuth("api", this.mailgunApiKey)
                 .queryString("from", formDataCuratorDTO.email())
                 .queryString("to", this.adminEmail)
                 .queryString("subject", "New request to work with us")
-                .queryString("text", "Nome: " + formDataCuratorDTO.name() + "Surname: " + formDataCuratorDTO.surname() + "Description role: " + formDataCuratorDTO.descriptionRole())
+                .queryString("html", "Nome: " + formDataCuratorDTO.name() + "Surname: " + formDataCuratorDTO.surname() + "Description role: " + formDataCuratorDTO.descriptionRole() + emailBody)
                 .asJson();
         System.out.println(response);
+        }
     }
 }
 
