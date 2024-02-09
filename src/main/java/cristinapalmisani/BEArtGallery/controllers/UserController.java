@@ -1,6 +1,8 @@
 package cristinapalmisani.BEArtGallery.controllers;
 
+import cristinapalmisani.BEArtGallery.config.EmailSender;
 import cristinapalmisani.BEArtGallery.entities.User;
+import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataCuratorDTO;
 import cristinapalmisani.BEArtGallery.payloads.user.UserDTO;
 import cristinapalmisani.BEArtGallery.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailSender emailSender;
 
     @GetMapping
     public Page<User> getUsers(@RequestParam(defaultValue = "0") int page,
@@ -61,6 +65,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void getUserByIdAndDelete(@PathVariable UUID userId) {
         userService.deleteById(userId);
+    }
+
+    @PostMapping("/sendEmailAdmin")
+    public void sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
+        emailSender.sendEmailToAdmin(formDataCuratorDTO);
     }
 }
 
