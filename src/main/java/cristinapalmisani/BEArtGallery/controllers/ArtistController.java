@@ -48,7 +48,7 @@ public class ArtistController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public ArtistResponseDTO create(@RequestBody @Validated ArtistDTO artist, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());

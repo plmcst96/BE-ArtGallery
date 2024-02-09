@@ -25,6 +25,8 @@ public class Artist {
     @Column(name = "die_date")
     private LocalDate dieDate;
     @Column(name = "history_artist")
+
+    @Lob
     private String historyArtist;
     @Column(name = "image_artist")
     private String imageArtist;

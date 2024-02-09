@@ -15,10 +15,7 @@ public record ArtistDTO(@NotNull(message = "name cannot be null")
                         @Size(min = 3, max = 30, message = "surname must be between 3 e 30 chars")
                         String surname,
                         @NotNull(message = "birth date cannot be null")
-                        @NotEmpty(message = "birth date cannot be empty")
                         LocalDate birthDate,
-                        @NotNull(message = "die date cannot be null")
-                        @NotEmpty(message = "die date cannot be empty")
                         LocalDate dieDate,
 
                         @NotNull(message = "History artist cannot be null")
