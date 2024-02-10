@@ -5,6 +5,7 @@ import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataCuratorDTO;
 import cristinapalmisani.BEArtGallery.payloads.formCurator.FormDataResponseDTO;
 import cristinapalmisani.BEArtGallery.payloads.user.UserDTO;
+import cristinapalmisani.BEArtGallery.services.AuthService;
 import cristinapalmisani.BEArtGallery.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private EmailSender emailSender;
+
 
     @GetMapping
     public Page<User> getUsers(@RequestParam(defaultValue = "0") int page,
@@ -73,7 +75,9 @@ public class UserController {
     @GetMapping("/{email}/setAccepted")
     @PreAuthorize("hasAuthority('ADMIN')")
     public User putInAccepted(@PathVariable String email){
-        return userService.setAccepted(email);
+        User user = userService.setAccepted(email);
+        emailSender.sendRegistrationEmailCurator(user);
+        return user;
     }
 
     @PostMapping("/sendEmailAdmin")

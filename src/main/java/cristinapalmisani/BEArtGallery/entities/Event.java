@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "events")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -28,5 +27,14 @@ public class Event extends GeneralAttribute{
     @ToString.Exclude
     @JsonIgnore
     private List<Ticket> tickets;
+
+
+    public Event(String title, String description, LocalDate date, TypeEvent typeEvent, double amount) {
+        super(title, description);
+        this.date = date;
+        this.typeEvent = typeEvent;
+        this.amount = amount;
+    }
+
 
 }

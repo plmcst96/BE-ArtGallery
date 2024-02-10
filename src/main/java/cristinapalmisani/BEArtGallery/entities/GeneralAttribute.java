@@ -13,13 +13,20 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Getter
 @Setter
-@AllArgsConstructor
+
 @NoArgsConstructor
 public abstract class GeneralAttribute {
     @Id
     @GeneratedValue
     private UUID uuid;
     private String title;
+    @Lob
     private String description;
     private String image;
+
+    public GeneralAttribute(String title, String description) {
+        this.title = title;
+        this.description = description;
+
+    }
 }
