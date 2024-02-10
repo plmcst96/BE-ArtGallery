@@ -1,5 +1,7 @@
 package cristinapalmisani.BEArtGallery.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
@@ -12,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -20,6 +24,8 @@ public class ArtistService {
 
     @Autowired
     private ArtistDAO artistDAO;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Artist save(ArtistDTO body) {
         Artist artist = new Artist();
@@ -57,5 +63,13 @@ public class ArtistService {
         artist.setDieDate(body.dieDate());
         artist.setBirthDate(body.birthDate());
         return artistDAO.save(artist);
+    }
+
+    public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
+        Artist artist = artistDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        artist.setImageArtist(url);
+        artistDAO.save(artist);
+        return url;
     }
 }

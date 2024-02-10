@@ -12,7 +12,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -57,5 +59,9 @@ public class ArtistController {
             Artist newArtist = artistService.save(artist);
             return new ArtistResponseDTO(newArtist.getUuid());
         }
+    }
+    @PostMapping("/{uuid}/image")
+    public String uploadExample(@PathVariable UUID uuid, @RequestParam("image") MultipartFile body) throws IOException {
+        return artistService.uploadPicture(uuid, body);
     }
 }

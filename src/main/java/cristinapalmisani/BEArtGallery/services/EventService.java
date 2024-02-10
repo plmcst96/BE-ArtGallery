@@ -1,5 +1,8 @@
 package cristinapalmisani.BEArtGallery.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.Blog;
 import cristinapalmisani.BEArtGallery.entities.Event;
 import cristinapalmisani.BEArtGallery.entities.TypeEvent;
@@ -13,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -21,6 +26,8 @@ public class EventService {
 
     @Autowired
     private EventDAO eventDAO;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Event save(EventDTO body) {
         Event event = new Event();
@@ -55,5 +62,13 @@ public class EventService {
         event.setTypeEvent(TypeEvent.ONLINE);
         event.setAmount(body.amount());
         return eventDAO.save(event);
+    }
+
+    public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
+        Event event = eventDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        event.setImage(url);
+        eventDAO.save(event);
+        return url;
     }
 }

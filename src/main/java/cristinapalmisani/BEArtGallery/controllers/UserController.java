@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -78,6 +80,11 @@ public class UserController {
     public FormDataResponseDTO sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
         emailSender.sendEmailToAdmin(formDataCuratorDTO, true);
         return new FormDataResponseDTO(formDataCuratorDTO.email());
+    }
+
+    @PostMapping("/{uuid}/avatar")
+    public String uploadExample(@PathVariable UUID uuid, @RequestParam("avatar") MultipartFile body) throws IOException {
+        return userService.uploadPicture(uuid, body);
     }
 }
 

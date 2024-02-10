@@ -1,5 +1,8 @@
 package cristinapalmisani.BEArtGallery.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.ArtistWork;
 import cristinapalmisani.BEArtGallery.entities.Blog;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
@@ -12,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -20,6 +25,8 @@ public class BlogService {
 
     @Autowired
     private BlogDAO blogDAO;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Blog save(BlogDTO body) {
         Blog blog = new Blog();
@@ -52,5 +59,13 @@ public class BlogService {
         blog.setDate(body.date());
         blog.setTitle(body.title());
         return blogDAO.save(blog);
+    }
+
+    public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
+        Blog blog = blogDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        blog.setImage(url);
+        blogDAO.save(blog);
+        return url;
     }
 }
