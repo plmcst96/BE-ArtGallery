@@ -30,22 +30,22 @@ public class ArtistController {
         return artistService.getArtist(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Artist getArtistById(@PathVariable UUID uuid) {
         return artistService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Artist getArtistByIdAndUpdate(@PathVariable UUID id, @RequestBody ArtistDTO artistBody) {
-        return artistService.findByIdAndUpdate(id, artistBody);
+    public Artist getArtistByIdAndUpdate(@PathVariable UUID uuid, @RequestBody ArtistDTO artistBody) {
+        return artistService.findByIdAndUpdate(uuid, artistBody);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getArtistByIdAndDelete(@PathVariable UUID id) {
-        artistService.deleteById(id);
+    public void getArtistByIdAndDelete(@PathVariable UUID uuid) {
+        artistService.deleteById(uuid);
     }
 
     @PostMapping

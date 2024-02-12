@@ -27,4 +27,7 @@ public class Gallery {
     @JsonIgnore
     private List<ArtistWork> artistWorks;
 
+
+    public void setArtist(UUID uuid) {
+    }
 }
