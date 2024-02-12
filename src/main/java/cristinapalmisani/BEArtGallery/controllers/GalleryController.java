@@ -4,7 +4,6 @@ package cristinapalmisani.BEArtGallery.controllers;
 import cristinapalmisani.BEArtGallery.entities.Gallery;
 import cristinapalmisani.BEArtGallery.exception.BadRequestException;
 
-import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryDTO;
 import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryResponseDTO;
 import cristinapalmisani.BEArtGallery.services.GalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +45,12 @@ public class GalleryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     //@PreAuthorize("hasAuthority('ADMIN')")
-    public GalleryResponseDTO create(@RequestBody @Validated GalleryDTO galleryDTO, BindingResult validation) {
+    public GalleryResponseDTO create(@RequestBody @Validated UUID artistId, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
             throw new BadRequestException("Something is wrong in the payload.");
         } else {
-            Gallery gallery = galleryService.save(galleryDTO);
+            Gallery gallery = galleryService.save(artistId);
             return new GalleryResponseDTO(gallery.getUuid());
         }
     }

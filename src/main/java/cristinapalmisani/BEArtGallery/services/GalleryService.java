@@ -1,11 +1,8 @@
 package cristinapalmisani.BEArtGallery.services;
 
 import cristinapalmisani.BEArtGallery.entities.Artist;
-import cristinapalmisani.BEArtGallery.entities.ArtistWork;
 import cristinapalmisani.BEArtGallery.entities.Gallery;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
-import cristinapalmisani.BEArtGallery.payloads.artistWork.ArtistWorkDTO;
-import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryDTO;
 import cristinapalmisani.BEArtGallery.repositories.GalleryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,10 +20,10 @@ public class GalleryService {
     @Autowired
     private ArtistService artistService;
 
-    public Gallery save(GalleryDTO body) {
+    public Gallery save(UUID artistId) {
         Gallery gallery = new Gallery();
-        Artist artist = artistService.findById(body.artistId());
-        gallery.setArtist(artist.getUuid());
+        Artist artist = artistService.findById(artistId);
+        gallery.setArtist(artist);
         return galleryDAO.save(gallery);
     }
 

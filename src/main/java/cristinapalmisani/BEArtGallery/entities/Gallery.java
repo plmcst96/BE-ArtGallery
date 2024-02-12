@@ -28,6 +28,5 @@ public class Gallery {
     private List<ArtistWork> artistWorks;
 
 
-    public void setArtist(UUID uuid) {
-    }
+
 }
