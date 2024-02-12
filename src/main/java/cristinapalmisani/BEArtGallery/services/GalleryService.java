@@ -3,6 +3,7 @@ package cristinapalmisani.BEArtGallery.services;
 import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.Gallery;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
+import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryDTO;
 import cristinapalmisani.BEArtGallery.repositories.GalleryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,9 +21,9 @@ public class GalleryService {
     @Autowired
     private ArtistService artistService;
 
-    public Gallery save(UUID artistId) {
+    public Gallery save(GalleryDTO artistId) {
         Gallery gallery = new Gallery();
-        Artist artist = artistService.findById(artistId);
+        Artist artist = artistService.findById(artistId.artistUuid());
         gallery.setArtist(artist);
         return galleryDAO.save(gallery);
     }
@@ -37,8 +38,8 @@ public class GalleryService {
     }
 
 
-    public void deleteById(UUID id) {
-        Gallery gallery = this.findById(id);
+    public void deleteById(UUID uuid) {
+        Gallery gallery = this.findById(uuid);
         galleryDAO.delete(gallery);
     }
 

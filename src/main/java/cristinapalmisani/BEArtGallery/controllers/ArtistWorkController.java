@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @RestController
@@ -32,22 +33,39 @@ public class ArtistWorkController {
         return artistWorkService.getArtistWork(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public ArtistWork getArtistWorkById(@PathVariable UUID uuid) {
         return artistWorkService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/artist/{artistId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ArtistWork getArtistWorkByIdAndUpdate(@PathVariable UUID id, @RequestBody ArtistWorkDTO artistBody) {
-        return artistWorkService.findByIdAndUpdate(id, artistBody);
+    public ArtistWork getArtistWorkByGalleryArtistUuid(@PathVariable UUID artistId,
+                                                       @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size,
+                                                       @RequestParam(defaultValue = "uuid") String orderBy){
+        return (ArtistWork) artistWorkService.getArtworksByArtistId(artistId, page, size, orderBy);
+    }
+    @GetMapping("/dateWork/{dateWork}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ArtistWork getArtistWorkByDateStarts(@PathVariable long dateWork,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size,
+                                                @RequestParam(defaultValue = "uuid") String orderBy){
+        return (ArtistWork) artistWorkService.getArtworksByYear(dateWork, page, size, orderBy);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{uuid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ArtistWork getArtistWorkByIdAndUpdate(@PathVariable UUID uuid, @RequestBody ArtistWorkDTO artistBody) {
+        return artistWorkService.findByIdAndUpdate(uuid, artistBody);
+    }
+
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getArtistWorkByIdAndDelete(@PathVariable UUID id) {
-        artistWorkService.deleteById(id);
+    public void getArtistWorkByIdAndDelete(@PathVariable UUID uuid) {
+        artistWorkService.deleteById(uuid);
     }
 
     @PostMapping

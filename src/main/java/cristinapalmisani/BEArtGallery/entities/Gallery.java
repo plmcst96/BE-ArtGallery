@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "gallery")
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,12 +21,16 @@ public class Gallery {
 
     @OneToOne
     @JoinColumn(name = "artist_id")
+
     private Artist artist;
-    @OneToMany(mappedBy = "gallery")
+    @OneToMany
+    @JoinColumn(name = "artistWork_id")
     @ToString.Exclude
     @JsonIgnore
     private List<ArtistWork> artistWorks;
 
-
+    public Gallery(String uuid) {
+        this.uuid = UUID.fromString(uuid);
+    }
 
 }

@@ -1,5 +1,6 @@
 package cristinapalmisani.BEArtGallery.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,5 +34,6 @@ public class Artist {
     private String quote;
 
     @OneToOne(mappedBy = "artist")
+    @JsonIgnore
     private Gallery gallery;
 }
