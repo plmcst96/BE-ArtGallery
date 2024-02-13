@@ -42,13 +42,13 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/registerCurator")
+    @PostMapping("/registerCurator")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDTO createUserCurator(@RequestBody @Validated UserDTO newUserPayload, BindingResult validation) throws IOException {
         if (validation.hasErrors()) {
             throw new BadRequestException("Ci sono errori nel payload!");
         }else {
-            User newUser = authService.registerUser(newUserPayload);
+            User newUser = authService.registerCurator(newUserPayload);
 
             return new UserResponseDTO(newUser.getUuid());
         }

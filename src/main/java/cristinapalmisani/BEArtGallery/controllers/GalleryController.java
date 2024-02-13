@@ -24,7 +24,7 @@ public class GalleryController {
     private GalleryService galleryService;
 
     @GetMapping
-    public Page<Gallery> getArtist(@RequestParam(defaultValue = "0") int page,
+    public Page<Gallery> getGalleries(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "10") int size,
                                    @RequestParam(defaultValue = "uuid") String orderBy) {
         return galleryService.getGallery(page, size, orderBy);
@@ -54,5 +54,11 @@ public class GalleryController {
             Gallery gallery = galleryService.save(artistUuid);
             return new GalleryResponseDTO(gallery.getUuid());
         }
+    }
+
+    @GetMapping("/artist/{artistId}")
+    public GalleryResponseDTO getGalleryIdByArtistId(@PathVariable UUID artistId) {
+        UUID galleryId = galleryService.getGalleryIdByArtistId(artistId);
+        return new GalleryResponseDTO(galleryId);
     }
 }

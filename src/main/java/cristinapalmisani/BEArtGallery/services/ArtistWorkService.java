@@ -6,20 +6,23 @@ import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.ArtistWork;
 import cristinapalmisani.BEArtGallery.entities.Gallery;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
-import cristinapalmisani.BEArtGallery.payloads.artist.ArtistDTO;
+
 import cristinapalmisani.BEArtGallery.payloads.artistWork.ArtistWorkDTO;
 import cristinapalmisani.BEArtGallery.repositories.ArtistWorkDAO;
-import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -54,16 +57,19 @@ public class ArtistWorkService {
         return artistWorkDAO.findAll(pageable);
     }
 
+    @Transactional
     public ArtistWork findById(UUID uuid) throws NotFoundException {
         return artistWorkDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
     }
 
 
+    @Transactional
     public void deleteById(UUID uuid) {
         ArtistWork artist = this.findById(uuid);
         artistWorkDAO.delete(artist);
     }
 
+    @Transactional
     public ArtistWork findByIdAndUpdate(UUID uuid, ArtistWorkDTO body) {
         ArtistWork artistWork = this.findById(uuid);
         artistWork.setNameWork(body.nameWork());
@@ -73,14 +79,16 @@ public class ArtistWorkService {
         return artistWorkDAO.save(artistWork);
     }
 
+    @Transactional
     public Page<ArtistWork> getArtworksByArtistId(UUID artistId, int page, int size, String orderBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
         Artist artist = artistService.findById(artistId);
         return artistWorkDAO.findByGalleryArtistUuid(artistId, pageable);
     }
 
-    public Page<ArtistWork> getArtworksByYear(long year, int page, int size, String ordedBy){
-        Pageable pageable = PageRequest.of(page, size, Sort.by(ordedBy));
+    @Transactional
+    public Page<ArtistWork> getArtworksByYear(long year, int page, int size, String orderBy){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
 
         return artistWorkDAO.findByYearStartWork(year, pageable );
     }
@@ -91,5 +99,11 @@ public class ArtistWorkService {
         work.setImage(url);
         artistWorkDAO.save(work);
         return url;
+    }
+
+    @Transactional
+    public Page<ArtistWork> trovaOperePerArtistaRaggruppatePerAnno(UUID galleryId, int page, int size, String orderBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return artistWorkDAO.findOperePerArtistaRaggruppatePerAnno(galleryId, pageable);
     }
 }

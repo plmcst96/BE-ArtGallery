@@ -4,6 +4,8 @@ import cristinapalmisani.BEArtGallery.entities.Artist;
 import cristinapalmisani.BEArtGallery.entities.Gallery;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
 import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryDTO;
+import cristinapalmisani.BEArtGallery.payloads.gallery.GalleryResponseDTO;
+import cristinapalmisani.BEArtGallery.repositories.ArtistDAO;
 import cristinapalmisani.BEArtGallery.repositories.GalleryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,11 +22,11 @@ public class GalleryService {
     @Autowired
     private GalleryDAO galleryDAO;
     @Autowired
-    private ArtistService artistService;
+    private ArtistDAO artistDAO;
 
     public Gallery save(GalleryDTO artistId) {
         Gallery gallery = new Gallery();
-        Artist artist = artistService.findById(artistId.artistUuid());
+        Artist artist = artistDAO.findById(artistId.artistUuid()).orElseThrow(()-> new NotFoundException("Id not found"));
         gallery.setArtist(artist);
         return galleryDAO.save(gallery);
     }
@@ -41,6 +44,17 @@ public class GalleryService {
     public void deleteById(UUID uuid) {
         Gallery gallery = this.findById(uuid);
         galleryDAO.delete(gallery);
+    }
+
+    public UUID getGalleryIdByArtistId(UUID artistId) {
+        Artist artist = artistDAO.findById(artistId)
+                .orElseThrow(() -> new NotFoundException("Artista non trovato con ID: " + artistId));
+
+        if (artist.getGallery() != null) {
+            return artist.getGallery().getUuid();
+        } else {
+            throw new NotFoundException("Galleria non trovata per l'artista con ID: " + artistId);
+        }
     }
 
 }

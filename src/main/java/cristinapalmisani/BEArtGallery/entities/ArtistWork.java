@@ -29,7 +29,7 @@ public class ArtistWork {
     @Column(name = "date_start_work")
     private long yearStartWork;
     @Lob
-    @JsonIgnore
+
     private String description;
     private String technique;
     private String image;

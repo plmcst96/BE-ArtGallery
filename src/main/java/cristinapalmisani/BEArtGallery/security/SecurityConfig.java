@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,7 +35,7 @@ public class SecurityConfig {
         httpSecurity.cors(Customizer.withDefaults());
         httpSecurity.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/**").permitAll());
-        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/{email}/setAccepted").permitAll().anyRequest().authenticated());
+        httpSecurity.authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/auth/registerCurator").permitAll().anyRequest().authenticated());
         return httpSecurity.build();
     }
 

@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -40,19 +42,19 @@ public class ArtistWorkController {
 
     @GetMapping("/artist/{artistId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ArtistWork getArtistWorkByGalleryArtistUuid(@PathVariable UUID artistId,
+    public Page<ArtistWork> getArtistWorkByGalleryArtistUuid(@PathVariable UUID artistId,
                                                        @RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "10") int size,
                                                        @RequestParam(defaultValue = "uuid") String orderBy){
-        return (ArtistWork) artistWorkService.getArtworksByArtistId(artistId, page, size, orderBy);
+        return artistWorkService.getArtworksByArtistId(artistId, page, size, orderBy);
     }
     @GetMapping("/dateWork/{dateWork}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ArtistWork getArtistWorkByDateStarts(@PathVariable long dateWork,
+    public Page<ArtistWork> getArtistWorkByDateStarts(@PathVariable long dateWork,
                                                 @RequestParam(defaultValue = "0") int page,
                                                 @RequestParam(defaultValue = "10") int size,
                                                 @RequestParam(defaultValue = "uuid") String orderBy){
-        return (ArtistWork) artistWorkService.getArtworksByYear(dateWork, page, size, orderBy);
+        return artistWorkService.getArtworksByYear(dateWork, page, size, orderBy);
     }
 
     @PutMapping("/{uuid}")
@@ -84,5 +86,12 @@ public class ArtistWorkController {
     @PostMapping("/{uuid}/image")
     public String uploadExample(@PathVariable UUID uuid, @RequestParam("image") MultipartFile body) throws IOException {
         return artistWorkService.uploadPicture(uuid, body);
+    }
+
+    @GetMapping("/artist/{galleryId}/groupByYear")
+    public Page<ArtistWork> findArtistWorkByYearAndGallery(@PathVariable UUID galleryId,@RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "10") int size,
+                                                                      @RequestParam(defaultValue = "uuid") String orderBy) {
+        return artistWorkService.trovaOperePerArtistaRaggruppatePerAnno(galleryId, page, size, orderBy);
     }
 }
