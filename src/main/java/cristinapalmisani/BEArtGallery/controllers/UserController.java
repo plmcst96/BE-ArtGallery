@@ -72,7 +72,7 @@ public class UserController {
         userService.deleteById(userId);
     }
 
-    @GetMapping("/{email}/setAccepted")
+  /*  @GetMapping("/{email}/setAccepted")
     @PreAuthorize("hasAuthority('ADMIN')")
     public User putInAccepted(@PathVariable String email){
         User user = userService.setAccepted(email);
@@ -84,7 +84,7 @@ public class UserController {
     public FormDataResponseDTO sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
         emailSender.sendEmailToAdmin(formDataCuratorDTO, true);
         return new FormDataResponseDTO(formDataCuratorDTO.email());
-    }
+    }*/
 
     @PostMapping("/{uuid}/avatar")
     public String uploadExample(@PathVariable UUID uuid, @RequestParam("avatar") MultipartFile body) throws IOException {

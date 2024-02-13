@@ -42,7 +42,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register-curator")
+    @GetMapping("/registerCurator")
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDTO createUserCurator(@RequestBody @Validated UserDTO newUserPayload, BindingResult validation) throws IOException {
         if (validation.hasErrors()) {

@@ -1,9 +1,13 @@
 package cristinapalmisani.BEArtGallery.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Clob;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -23,12 +27,14 @@ public class ArtistWork {
     @Column(name = "name_work")
     private String nameWork;
     @Column(name = "date_start_work")
-    private LocalDate dateStartWork;
+    private long yearStartWork;
+    @Lob
+    @JsonIgnore
     private String description;
     private String technique;
     private String image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gallery_id")
     private Gallery gallery;
     @OneToOne(mappedBy = "artistWork")
