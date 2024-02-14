@@ -93,6 +93,7 @@ public class ArtistWorkService {
         return artistWorkDAO.findByYearStartWork(year, pageable );
     }
 
+    @Transactional
     public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
         ArtistWork work = artistWorkDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");

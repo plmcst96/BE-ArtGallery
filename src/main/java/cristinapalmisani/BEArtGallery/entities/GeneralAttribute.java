@@ -1,11 +1,10 @@
 package cristinapalmisani.BEArtGallery.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -22,7 +21,8 @@ public abstract class GeneralAttribute {
     private String title;
     @Lob
     private String description;
-    private String image;
+    @ToString.Exclude
+    private List<String> image;
 
     public GeneralAttribute(String title, String description) {
         this.title = title;

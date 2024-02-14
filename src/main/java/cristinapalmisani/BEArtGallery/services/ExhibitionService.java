@@ -14,9 +14,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,6 +30,7 @@ public class ExhibitionService {
     @Autowired
     private Cloudinary cloudinary;
 
+    @Transactional
     public Exhibition save(ExhibitionDTO body) {
         Exhibition exhibition = new Exhibition();
         exhibition.setEndDate(body.endDate());
@@ -38,21 +42,24 @@ public class ExhibitionService {
         return exhibitionDAO.save(exhibition);
     }
 
+    @Transactional
     public Page<Exhibition> getExhibition(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return exhibitionDAO.findAll(pageable);
     }
 
+    @Transactional
     public Exhibition findById(UUID uuid) throws NotFoundException {
         return exhibitionDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
     }
 
-
+    @Transactional
     public void deleteById(UUID id) {
         Exhibition artist = this.findById(id);
         exhibitionDAO.delete(artist);
     }
 
+    @Transactional
     public Exhibition findByIdAndUpdate(UUID id, ExhibitionDTO body) {
         Exhibition exhibition = this.findById(id);
         exhibition.setEndDate(body.endDate());
@@ -63,11 +70,20 @@ public class ExhibitionService {
         exhibition.setAmount(body.amount());
         return exhibitionDAO.save(exhibition);
     }
-    public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
+
+    @Transactional
+    public List<String> uploadPicture(UUID uuid, List<MultipartFile> files) throws IOException {
         Exhibition exhibition = exhibitionDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
-        exhibition.setImage(url);
+        List<String> imageUrls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+            imageUrls.add(url);
+        }
+
+        // Aggiorna la lista delle immagini dell'evento
+        exhibition.setImage(imageUrls);
         exhibitionDAO.save(exhibition);
-        return url;
+
+        return imageUrls;
     }
 }

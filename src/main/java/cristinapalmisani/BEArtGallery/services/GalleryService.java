@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class GalleryService {
     @Autowired
     private ArtistDAO artistDAO;
 
+    @Transactional
     public Gallery save(GalleryDTO artistId) {
         Gallery gallery = new Gallery();
         Artist artist = artistDAO.findById(artistId.artistUuid()).orElseThrow(()-> new NotFoundException("Id not found"));
@@ -31,21 +33,26 @@ public class GalleryService {
         return galleryDAO.save(gallery);
     }
 
+    @Transactional
+
     public Page<Gallery> getGallery(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return galleryDAO.findAll(pageable);
     }
 
+    @Transactional
     public Gallery findById(UUID uuid) throws NotFoundException {
         return galleryDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
     }
 
 
+    @Transactional
     public void deleteById(UUID uuid) {
         Gallery gallery = this.findById(uuid);
         galleryDAO.delete(gallery);
     }
 
+    @Transactional
     public UUID getGalleryIdByArtistId(UUID artistId) {
         Artist artist = artistDAO.findById(artistId)
                 .orElseThrow(() -> new NotFoundException("Artista non trovato con ID: " + artistId));

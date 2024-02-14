@@ -15,9 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,6 +31,7 @@ public class BlogService {
     @Autowired
     private Cloudinary cloudinary;
 
+    @Transactional
     public Blog save(BlogDTO body) {
         Blog blog = new Blog();
         blog.setAuthor(body.author());
@@ -37,21 +41,25 @@ public class BlogService {
         return blogDAO.save(blog);
     }
 
+    @Transactional
     public Page<Blog> getBlog(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return blogDAO.findAll(pageable);
     }
 
+    @Transactional
     public Blog findById(UUID uuid) throws NotFoundException {
         return blogDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
     }
 
 
+    @Transactional
     public void deleteById(UUID id) {
         Blog blog = this.findById(id);
         blogDAO.delete(blog);
     }
 
+    @Transactional
     public Blog findByIdAndUpdate(UUID id, BlogDTO body) {
         Blog blog = this.findById(id);
         blog.setAuthor(body.author());
@@ -61,11 +69,19 @@ public class BlogService {
         return blogDAO.save(blog);
     }
 
-    public String uploadPicture(UUID uuid, MultipartFile file) throws IOException {
+    @Transactional
+    public List<String> uploadPicture(UUID uuid, List<MultipartFile> files) throws IOException {
         Blog blog = blogDAO.findById(uuid).orElseThrow(() -> new NotFoundException(uuid));
-        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
-        blog.setImage(url);
+        List<String> imageUrls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+            imageUrls.add(url);
+        }
+
+        // Aggiorna la lista delle immagini dell'evento
+        blog.setImage(imageUrls);
         blogDAO.save(blog);
-        return url;
+
+        return imageUrls;
     }
 }

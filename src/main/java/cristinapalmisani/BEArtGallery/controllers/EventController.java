@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,22 +35,22 @@ public class EventController {
         return eventService.getEvent(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Event getEventById(@PathVariable UUID uuid) {
         return eventService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Event getEventByIdAndUpdate(@PathVariable UUID id, @RequestBody EventDTO eventBody) {
-        return eventService.findByIdAndUpdate(id, eventBody);
+    public Event getEventByIdAndUpdate(@PathVariable UUID uuid, @RequestBody EventDTO eventBody) {
+        return eventService.findByIdAndUpdate(uuid, eventBody);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getEventByIdAndDelete(@PathVariable UUID id) {
-        eventService.deleteById(id);
+    public void getEventByIdAndDelete(@PathVariable UUID uuid) {
+        eventService.deleteById(uuid);
     }
 
     @PostMapping
@@ -65,7 +66,7 @@ public class EventController {
         }
     }
     @PostMapping("/{uuid}/image")
-    public String uploadExample(@PathVariable UUID uuid, @RequestParam("image") MultipartFile body) throws IOException {
+    public List<String> uploadExample(@PathVariable UUID uuid, @RequestParam("image") List<MultipartFile> body) throws IOException {
         return eventService.uploadPicture(uuid, body);
     }
 }
