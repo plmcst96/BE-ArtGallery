@@ -88,7 +88,7 @@ public class ArtistWorkController {
         return artistWorkService.uploadPicture(uuid, body);
     }
 
-    @GetMapping("/artist/{galleryId}/groupByYear")
+    @GetMapping("/artist/groupByYear/{galleryId}")
     public Page<ArtistWork> findArtistWorkByYearAndGallery(@PathVariable UUID galleryId,@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size,
                                                                       @RequestParam(defaultValue = "uuid") String orderBy) {
