@@ -21,6 +21,7 @@ public class Blog extends GeneralAttribute{
     @Setter(AccessLevel.NONE)
     private UUID uuid;
     private String author;
+    private String quote;
     private LocalDate date;
     @OneToMany(mappedBy = "blog")
     @ToString.Exclude

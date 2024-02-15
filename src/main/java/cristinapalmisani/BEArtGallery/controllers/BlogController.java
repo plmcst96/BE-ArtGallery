@@ -35,22 +35,22 @@ public class BlogController {
         return blogService.getBlog(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Blog getBlogById(@PathVariable UUID uuid) {
         return blogService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Blog getBlogByIdAndUpdate(@PathVariable UUID id, @RequestBody BlogDTO artistBody) {
-        return blogService.findByIdAndUpdate(id, artistBody);
+    public Blog getBlogByIdAndUpdate(@PathVariable UUID uuid, @RequestBody BlogDTO artistBody) {
+        return blogService.findByIdAndUpdate(uuid, artistBody);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getBlogByIdAndDelete(@PathVariable UUID id) {
-        blogService.deleteById(id);
+    public void getBlogByIdAndDelete(@PathVariable UUID uuid) {
+        blogService.deleteById(uuid);
     }
 
     @PostMapping
