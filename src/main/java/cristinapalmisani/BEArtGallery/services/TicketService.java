@@ -26,7 +26,7 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setDate(body.date());
         ticket.setNumberPerson(body.numberPerson());
-        ticket.setTypeTicket(TypeTicket.STANDARD);
+        ticket.setTypeTicket(body.typeTicket());
         ticket.setTotal(body.total());
         return ticketDAO.save(ticket);
     }
