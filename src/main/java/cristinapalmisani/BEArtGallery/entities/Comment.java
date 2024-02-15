@@ -18,8 +18,8 @@ public class Comment {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID uuid;
-    @Column(name = "date_time")
-    private LocalDateTime dateTime;
+
+    private int rate;
     private String text;
 
     @ManyToOne

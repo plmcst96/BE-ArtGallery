@@ -24,7 +24,7 @@ public class CommentService {
     public Comment save(CommentDTO body) {
         Comment comment = new Comment();
         comment.setText(body.text());
-        comment.setDateTime(body.dateTime());
+        comment.setRate(body.rate());
 
         return commentDAO.save(comment);
     }
@@ -47,7 +47,7 @@ public class CommentService {
     public Comment findByIdAndUpdate(UUID id, CommentDTO body) {
         Comment comment = this.findById(id);
         comment.setText(body.text());
-        comment.setDateTime(body.dateTime());
+        comment.setRate(body.rate());
         return commentDAO.save(comment);
     }
 }

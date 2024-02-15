@@ -25,8 +25,8 @@ public class TicketService {
     public Ticket save(TicketDTO body) {
         Ticket ticket = new Ticket();
         ticket.setDate(body.date());
-        ticket.setNumberPerson(body.numberPerson());
-        ticket.setTypeTicket(body.typeTicket());
+        ticket.setHour(body.hour());
+
         ticket.setTotal(body.total());
         return ticketDAO.save(ticket);
     }
@@ -49,7 +49,7 @@ public class TicketService {
     public Ticket findByIdAndUpdate(UUID id, TicketDTO body) {
         Ticket ticket = this.findById(id);
         ticket.setDate(body.date());
-        ticket.setNumberPerson(body.numberPerson());
+        ticket.setHour(body.hour());
         ticket.setTypeTicket(TypeTicket.STANDARD);
         ticket.setTotal(body.total());
         return ticketDAO.save(ticket);

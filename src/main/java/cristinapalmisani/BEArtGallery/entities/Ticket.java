@@ -19,11 +19,11 @@ public class Ticket {
     @Setter(AccessLevel.NONE)
     private UUID uuid;
     private double total;
-    private LocalDate date;
+    private String date;
     @Column(name = "image_PDF")
     private String imageDoc;
-    @Column(name = "number_people")
-    private int numberPerson;
+
+    private String hour;
     @Enumerated(EnumType.STRING)
     @Column(name = "type_ticket")
     private TypeTicket typeTicket;

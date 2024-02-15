@@ -5,19 +5,15 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record TicketDTO(@NotNull(message = "date work cannot be null")
-                        @NotEmpty(message = "date work cannot be empty")
-                        LocalDate date,
+                        String date,
+
+                        String hour,
                         @NotNull(message = "start date work cannot be null")
-                        @NotEmpty(message = "start date work cannot be empty")
-                        int numberPerson,
-                        @NotNull(message = "start date work cannot be null")
-                        @NotEmpty(message = "start date work cannot be empty")
-                        double total,
-                        @NotNull(message = "start date work cannot be null")
-                        @NotEmpty(message = "start date work cannot be empty")
-                        TypeTicket typeTicket
+                        double total
+
 
                         ) {
 }

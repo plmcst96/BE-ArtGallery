@@ -5,10 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public record CommentDTO(@NotNull(message = "DateTime work cannot be null")
-                         @NotEmpty(message = "DateTime work cannot be empty")
-                         LocalDateTime dateTime,
-                         @NotNull(message = "text work cannot be null")
-                         @NotEmpty(message = "text work cannot be empty")
+public record CommentDTO(@NotNull(message = "Rate work cannot be null")
+                         int rate,
+                         @NotNull(message = "Text work cannot be null")
                          String text) {
 }
