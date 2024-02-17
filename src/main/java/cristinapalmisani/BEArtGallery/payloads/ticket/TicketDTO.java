@@ -11,6 +11,8 @@ import java.util.UUID;
 public record TicketDTO(@NotNull(message = "date work cannot be null")
                         String date,
                         UUID event,
+                        UUID exhibition,
+                        UUID user,
                         String hour,
                         @NotNull(message = "start date work cannot be null")
                         double total

@@ -34,8 +34,10 @@ public class User implements UserDetails {
     private Role role;
     private boolean accepted;
 
-    @OneToOne(mappedBy = "user")
-    private Ticket ticket;
+    @OneToMany(mappedBy = "user")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Ticket> ticket;
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore

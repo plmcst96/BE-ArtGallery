@@ -32,27 +32,31 @@ public class CommentController {
         return commentService.getComment(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Comment getCommentById(@PathVariable UUID uuid) {
         return commentService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public Comment getCommentByIdAndUpdate(@PathVariable UUID id, @RequestBody CommentDTO commentBody) {
-        return commentService.findByIdAndUpdate(id, commentBody);
+    @GetMapping("/blog/{idBlog}")
+    public Page<Comment> getCommentByBlog(@PathVariable UUID idBlog, @RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "uuid") String orderBy){
+        return commentService.findByIdBlog(idBlog, page, size, orderBy);
     }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/{uuid}")
+    public Comment getCommentByIdAndUpdate(@PathVariable UUID uuid, @RequestBody CommentDTO commentBody) {
+        return commentService.findByIdAndUpdate(uuid, commentBody);
+    }
+
+    @DeleteMapping("/{uuid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getCommentByIdAndDelete(@PathVariable UUID id) {
-        commentService.deleteById(id);
+    public void getCommentByIdAndDelete(@PathVariable UUID uuid) {
+        commentService.deleteById(uuid);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
     public CommentResponseDTO create(@RequestBody @Validated CommentDTO comment, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());

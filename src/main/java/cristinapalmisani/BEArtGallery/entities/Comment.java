@@ -1,5 +1,6 @@
 package cristinapalmisani.BEArtGallery.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +19,6 @@ public class Comment {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID uuid;
-
     private int rate;
     private String text;
 
@@ -26,6 +26,7 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "blog_id")
     private Blog blog;
 

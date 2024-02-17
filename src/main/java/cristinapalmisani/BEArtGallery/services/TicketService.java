@@ -1,9 +1,6 @@
 package cristinapalmisani.BEArtGallery.services;
 
-import cristinapalmisani.BEArtGallery.entities.Event;
-import cristinapalmisani.BEArtGallery.entities.Location;
-import cristinapalmisani.BEArtGallery.entities.Ticket;
-import cristinapalmisani.BEArtGallery.entities.TypeTicket;
+import cristinapalmisani.BEArtGallery.entities.*;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
 import cristinapalmisani.BEArtGallery.payloads.location.LocationDTO;
 import cristinapalmisani.BEArtGallery.payloads.ticket.TicketDTO;
@@ -24,15 +21,18 @@ public class TicketService {
     private TicketDAO ticketDAO;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private UserService userService;
 
     public Ticket save(TicketDTO body) {
         Ticket ticket = new Ticket();
         Event event = eventService.findById(body.event());
+        User user = userService.findById(body.user());
         ticket.setDate(body.date());
         ticket.setHour(body.hour());
         ticket.setEvent(event);
         ticket.setTotal(body.total());
-
+        ticket.setUser(user);
         return ticketDAO.save(ticket);
     }
 

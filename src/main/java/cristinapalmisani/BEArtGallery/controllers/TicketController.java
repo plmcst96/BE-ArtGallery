@@ -52,7 +52,7 @@ public class TicketController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('ADMIN')")
+
     public TicketResponseDTO create(@RequestBody @Validated TicketDTO comment, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
