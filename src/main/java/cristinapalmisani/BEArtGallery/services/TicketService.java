@@ -1,5 +1,6 @@
 package cristinapalmisani.BEArtGallery.services;
 
+import cristinapalmisani.BEArtGallery.entities.Event;
 import cristinapalmisani.BEArtGallery.entities.Location;
 import cristinapalmisani.BEArtGallery.entities.Ticket;
 import cristinapalmisani.BEArtGallery.entities.TypeTicket;
@@ -21,13 +22,17 @@ public class TicketService {
 
     @Autowired
     private TicketDAO ticketDAO;
+    @Autowired
+    private EventService eventService;
 
     public Ticket save(TicketDTO body) {
         Ticket ticket = new Ticket();
+        Event event = eventService.findById(body.event());
         ticket.setDate(body.date());
         ticket.setHour(body.hour());
-
+        ticket.setEvent(event);
         ticket.setTotal(body.total());
+
         return ticketDAO.save(ticket);
     }
 
@@ -50,7 +55,6 @@ public class TicketService {
         Ticket ticket = this.findById(id);
         ticket.setDate(body.date());
         ticket.setHour(body.hour());
-        ticket.setTypeTicket(TypeTicket.STANDARD);
         ticket.setTotal(body.total());
         return ticketDAO.save(ticket);
     }
