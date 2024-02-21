@@ -1,5 +1,6 @@
 package cristinapalmisani.BEArtGallery.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,8 +27,10 @@ public class Location {
 
     @OneToOne
     @JoinColumn(name = "artist_work_id")
+    @JsonIgnore
     private ArtistWork artistWork;
     @OneToOne
     @JoinColumn(name = "exhibition_id")
+    @JsonIgnore
     private Exhibition exhibition;
 }

@@ -4,8 +4,8 @@ import cristinapalmisani.BEArtGallery.entities.Blog;
 import cristinapalmisani.BEArtGallery.entities.Comment;
 import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
-import cristinapalmisani.BEArtGallery.payloads.blog.BlogDTO;
 import cristinapalmisani.BEArtGallery.payloads.comment.CommentDTO;
+import cristinapalmisani.BEArtGallery.payloads.comment.CommentPutDTO;
 import cristinapalmisani.BEArtGallery.repositories.CommentDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,8 +62,8 @@ public class CommentService {
         commentDAO.delete(comment);
     }
 
-    @Transactional
-    public Comment findByIdAndUpdate(UUID uuid, CommentDTO body) {
+
+    public Comment findByIdAndUpdate(UUID uuid, CommentPutDTO body) {
         Comment comment = this.findById(uuid);
         comment.setText(body.text());
         comment.setRate(body.rate());

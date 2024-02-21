@@ -26,13 +26,17 @@ public class Exhibition extends GeneralAttribute{
     @Column(name = "end_date")
     private LocalDate endDate;
     @Column(name = "open_hours")
-    private LocalTime openHour;
+    private String openHour;
     private double amount;
 
     @OneToOne(mappedBy = "exhibition")
+    @ToString.Exclude
+    @JsonIgnore
     private Location location;
     @ManyToOne
     @JoinColumn(name = "artist_work_id")
+    @ToString.Exclude
+    @JsonIgnore
     private ArtistWork artistWork;
     @OneToMany(mappedBy = "exhibition", cascade = CascadeType.ALL)
     @ToString.Exclude

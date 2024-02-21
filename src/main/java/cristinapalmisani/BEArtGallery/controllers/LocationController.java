@@ -32,33 +32,38 @@ public class LocationController {
         return locationService.getLocation(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Location getLocationById(@PathVariable UUID uuid) {
         return locationService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public Location getLocationByIdAndUpdate(@PathVariable UUID id, @RequestBody LocationDTO locationBody) {
-        return locationService.findByIdAndUpdate(id, locationBody);
+    @GetMapping("/exhibition/{uuid}")
+    public Location getLocationByExhibitionId(@PathVariable UUID uuid){
+        return locationService.findByExhibitionId(uuid);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{uuid}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Location getLocationByIdAndUpdate(@PathVariable UUID uuid, @RequestBody LocationDTO locationBody) {
+        return locationService.findByIdAndUpdate(uuid, locationBody);
+    }
+
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getLocationByIdAndDelete(@PathVariable UUID id) {
-        locationService.deleteById(id);
+    public void getLocationByIdAndDelete(@PathVariable UUID uuid) {
+        locationService.deleteById(uuid);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public LocationResponseDTO create(@RequestBody @Validated LocationDTO comment, BindingResult validation) {
+    public LocationResponseDTO create(@RequestBody @Validated LocationDTO location, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
             throw new BadRequestException("Something is wrong in the payload.");
         } else {
-            Location newLocation = locationService.save(comment);
+            Location newLocation = locationService.save(location);
             return new LocationResponseDTO(newLocation.getUuid());
         }
     }

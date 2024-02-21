@@ -11,5 +11,6 @@ public record CommentDTO(@NotNull(message = "Rate work cannot be null")
                          @NotNull(message = "Text work cannot be null")
                          String text,
                          UUID blog,
-                         UUID user) {
+                         UUID user,
+                         UUID comment) {
 }

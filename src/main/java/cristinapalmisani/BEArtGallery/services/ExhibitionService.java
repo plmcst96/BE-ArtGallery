@@ -3,6 +3,7 @@ package cristinapalmisani.BEArtGallery.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import cristinapalmisani.BEArtGallery.entities.Artist;
+import cristinapalmisani.BEArtGallery.entities.ArtistWork;
 import cristinapalmisani.BEArtGallery.entities.Exhibition;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
 import cristinapalmisani.BEArtGallery.payloads.blog.BlogDTO;
@@ -29,16 +30,20 @@ public class ExhibitionService {
     private ExhibitionDAO exhibitionDAO;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private ArtistWorkService artistWorkService;
 
     @Transactional
     public Exhibition save(ExhibitionDTO body) {
         Exhibition exhibition = new Exhibition();
+        ArtistWork artistWork = artistWorkService.findById(body.artistWork());
         exhibition.setEndDate(body.endDate());
         exhibition.setDescription(body.description());
         exhibition.setStartDate(body.startDate());
         exhibition.setTitle(body.title());
         exhibition.setOpenHour(body.openHour());
         exhibition.setAmount(body.amount());
+        exhibition.setArtistWork(artistWork);
         return exhibitionDAO.save(exhibition);
     }
 

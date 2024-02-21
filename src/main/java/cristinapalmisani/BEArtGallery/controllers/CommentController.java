@@ -1,17 +1,14 @@
 package cristinapalmisani.BEArtGallery.controllers;
 
-import cristinapalmisani.BEArtGallery.entities.Blog;
 import cristinapalmisani.BEArtGallery.entities.Comment;
 import cristinapalmisani.BEArtGallery.exception.BadRequestException;
-import cristinapalmisani.BEArtGallery.payloads.blog.BlogDTO;
-import cristinapalmisani.BEArtGallery.payloads.blog.BlogResponseDTO;
 import cristinapalmisani.BEArtGallery.payloads.comment.CommentDTO;
+import cristinapalmisani.BEArtGallery.payloads.comment.CommentPutDTO;
 import cristinapalmisani.BEArtGallery.payloads.comment.CommentResponseDTO;
 import cristinapalmisani.BEArtGallery.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +41,9 @@ public class CommentController {
         return commentService.findByIdBlog(idBlog, page, size, orderBy);
     }
 
-    @PutMapping("/{uuid}")
-    public Comment getCommentByIdAndUpdate(@PathVariable UUID uuid, @RequestBody CommentDTO commentBody) {
+    @PutMapping("/md/{uuid}")
+    public Comment getCommentByIdAndUpdate(@PathVariable UUID uuid, @RequestBody CommentPutDTO commentBody) {
+
         return commentService.findByIdAndUpdate(uuid, commentBody);
     }
 

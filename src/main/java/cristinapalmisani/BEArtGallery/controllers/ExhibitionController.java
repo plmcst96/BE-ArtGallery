@@ -28,40 +28,40 @@ public class ExhibitionController {
     @Autowired
     private ExhibitionService exhibitionService;
 
-    @GetMapping
+    @GetMapping("/all")
     public Page<Exhibition> getExhibition(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "10") int size,
                                           @RequestParam(defaultValue = "uuid") String orderBy) {
         return exhibitionService.getExhibition(page, size, orderBy);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{uuid}")
     public Exhibition getExhibitionById(@PathVariable UUID uuid) {
         return exhibitionService.findById(uuid);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Exhibition getExhibitionByIdAndUpdate(@PathVariable UUID id, @RequestBody ExhibitionDTO exhibitionBody) {
-        return exhibitionService.findByIdAndUpdate(id, exhibitionBody);
+    public Exhibition getExhibitionByIdAndUpdate(@PathVariable UUID uuid, @RequestBody ExhibitionDTO exhibitionBody) {
+        return exhibitionService.findByIdAndUpdate(uuid, exhibitionBody);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getExhibitionByIdAndDelete(@PathVariable UUID id) {
-        exhibitionService.deleteById(id);
+    public void getExhibitionByIdAndDelete(@PathVariable UUID uuid) {
+        exhibitionService.deleteById(uuid);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ExhibitionResponseDTO create(@RequestBody @Validated ExhibitionDTO comment, BindingResult validation) {
+    public ExhibitionResponseDTO create(@RequestBody @Validated ExhibitionDTO exhibition, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
             throw new BadRequestException("Something is wrong in the payload.");
         } else {
-            Exhibition newExhibition = exhibitionService.save(comment);
+            Exhibition newExhibition = exhibitionService.save(exhibition);
             return new ExhibitionResponseDTO(newExhibition.getUuid());
         }
     }

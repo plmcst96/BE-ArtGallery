@@ -3,19 +3,18 @@ package cristinapalmisani.BEArtGallery.payloads.location;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public record LocationDTO(@NotNull(message = "start date work cannot be null")
-                          @NotEmpty(message = "start date work cannot be empty")
                           String address,
                           @NotNull(message = "start date work cannot be null")
-                          @NotEmpty(message = "start date work cannot be empty")
                           String city,
                           @NotNull(message = "start date work cannot be null")
-                          @NotEmpty(message = "start date work cannot be empty")
                           int zipCode,
                           @NotNull(message = "start date work cannot be null")
-                          @NotEmpty(message = "start date work cannot be empty")
                           String nation,
                           @NotNull(message = "start date work cannot be null")
-                          @NotEmpty(message = "start date work cannot be empty")
-                          String nameMuseum) {
+                          String nameMuseum,
+                          UUID artistWork,
+                          UUID exhibition) {
 }
