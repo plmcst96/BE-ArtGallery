@@ -1,12 +1,9 @@
 package cristinapalmisani.BEArtGallery.services;
 
-import cristinapalmisani.BEArtGallery.entities.ArtistWork;
-import cristinapalmisani.BEArtGallery.entities.Blog;
-import cristinapalmisani.BEArtGallery.entities.Exhibition;
-import cristinapalmisani.BEArtGallery.entities.Location;
+import cristinapalmisani.BEArtGallery.entities.*;
 import cristinapalmisani.BEArtGallery.exception.NotFoundException;
-import cristinapalmisani.BEArtGallery.payloads.blog.BlogDTO;
 import cristinapalmisani.BEArtGallery.payloads.location.LocationDTO;
+import cristinapalmisani.BEArtGallery.payloads.location.LocationPostDTO;
 import cristinapalmisani.BEArtGallery.repositories.LocationDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +24,8 @@ public class LocationService {
     private ArtistWorkService artistWorkService;
     @Autowired
     private ExhibitionService exhibitionService;
+    @Autowired
+    private UserService userService;
 
     @Transactional
     public Location save(LocationDTO body) {
@@ -41,6 +40,18 @@ public class LocationService {
         location.setArtistWork(artistWork);
         location.setExhibition(exhibition);
         return locationDAO.save(location);
+    }
+
+    @Transactional
+    public Location saveLocationUser(LocationPostDTO body){
+        Location location = new Location();
+        User user = userService.findById(body.userId());
+        location.setAddress(body.address());
+        location.setCity(body.city());
+        location.setNation(body.nation());
+        location.setZipCode(body.zipCode());
+        location.setUser(user);
+        return  locationDAO.save(location);
     }
 
     @Transactional
@@ -59,6 +70,10 @@ public class LocationService {
         return locationDAO.findByExhibitionUuid(exhibitionId).orElseThrow(()-> new NotFoundException(exhibitionId));
     }
 
+    @Transactional
+    public Location findByUserUuid(UUID userUuid) throws NotFoundException{
+        return locationDAO.findByUserUuid(userUuid).orElseThrow(()-> new NotFoundException(userUuid));
+    }
 
     @Transactional
     public void deleteById(UUID id) {

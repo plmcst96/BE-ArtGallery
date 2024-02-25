@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface LocationDAO extends JpaRepository<Location, UUID> {
     Optional<Location> findByExhibitionUuid(UUID exhibitionUuid);
+    Optional<Location> findByUserUuid(UUID userUuid);
 }

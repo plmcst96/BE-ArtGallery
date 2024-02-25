@@ -3,6 +3,7 @@ package cristinapalmisani.BEArtGallery.services;
 import cristinapalmisani.BEArtGallery.entities.Role;
 import cristinapalmisani.BEArtGallery.entities.User;
 import cristinapalmisani.BEArtGallery.exception.BadRequestException;
+import cristinapalmisani.BEArtGallery.exception.NotFoundException;
 import cristinapalmisani.BEArtGallery.exception.UnauthorizedException;
 import cristinapalmisani.BEArtGallery.payloads.user.UserDTO;
 import cristinapalmisani.BEArtGallery.payloads.user.UserLoginDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -51,6 +53,15 @@ public class AuthService {
         user.setSurname(body.surname());
         user.setEmail(body.email());
         user.setRole(Role.USER);
+        return userDAO.save(user);
+    }
+
+    public User findByIdAndUpdate(UUID id, UserDTO body) {
+        User user = userService.findById(id);
+        user.setEmail(body.email());
+        user.setName(body.name());
+        user.setSurname(body.surname());
+        user.setPassword(bcrypt.encode(body.password()));
         return userDAO.save(user);
     }
 

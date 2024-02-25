@@ -1,12 +1,10 @@
 package cristinapalmisani.BEArtGallery.controllers;
 
-import cristinapalmisani.BEArtGallery.entities.Comment;
 import cristinapalmisani.BEArtGallery.entities.Location;
 import cristinapalmisani.BEArtGallery.exception.BadRequestException;
-import cristinapalmisani.BEArtGallery.payloads.comment.CommentDTO;
-import cristinapalmisani.BEArtGallery.payloads.comment.CommentResponseDTO;
 import cristinapalmisani.BEArtGallery.payloads.location.LocationDTO;
 import cristinapalmisani.BEArtGallery.payloads.location.LocationResponseDTO;
+import cristinapalmisani.BEArtGallery.payloads.location.LocationPostDTO;
 import cristinapalmisani.BEArtGallery.services.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +40,11 @@ public class LocationController {
         return locationService.findByExhibitionId(uuid);
     }
 
+    @GetMapping("/user/{uuid}")
+    public Location getLocationByUserId(@PathVariable UUID uuid){
+        return locationService.findByUserUuid(uuid);
+    }
+
     @PutMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Location getLocationByIdAndUpdate(@PathVariable UUID uuid, @RequestBody LocationDTO locationBody) {
@@ -52,6 +55,11 @@ public class LocationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void getLocationByIdAndDelete(@PathVariable UUID uuid) {
+        locationService.deleteById(uuid);
+    }
+    @DeleteMapping("/user/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void getLocationUserByIdAndDelete(@PathVariable UUID uuid) {
         locationService.deleteById(uuid);
     }
 
@@ -67,4 +75,17 @@ public class LocationController {
             return new LocationResponseDTO(newLocation.getUuid());
         }
     }
+
+    @PostMapping("/user")
+    public Location createLocationUser(@RequestBody @Validated LocationPostDTO location, BindingResult validation){
+        if (validation.hasErrors()){
+            System.out.println(validation.getAllErrors());
+            throw new BadRequestException("Something is wrong in payload");
+        } else {
+            return locationService.saveLocationUser(location);
+        }
+    }
 }
+
+
+

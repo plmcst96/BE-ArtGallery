@@ -26,6 +26,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private EmailSender emailSender;
+    @Autowired
+    private AuthService authService;
 
 
     @GetMapping
@@ -44,14 +46,13 @@ public class UserController {
 
     @PutMapping("/me")
     public User getMeAndUpdate(@AuthenticationPrincipal User currentUser, @RequestBody UserDTO body) {
-        return userService.findByIdAndUpdate(currentUser.getUuid(), body);
+        return authService.findByIdAndUpdate(currentUser.getUuid(), body);
     }
 
     @DeleteMapping("/me")
     public void getMeAnDelete(@AuthenticationPrincipal User currentUser) {
         userService.deleteById(currentUser.getUuid());
     }
-
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable UUID userId) {
@@ -62,7 +63,7 @@ public class UserController {
     @PutMapping("/{userId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public User getUserByIdAndUpdate(@PathVariable UUID userId, @RequestBody UserDTO modifiedUserPayload) {
-        return userService.findByIdAndUpdate(userId, modifiedUserPayload);
+        return authService.findByIdAndUpdate(userId, modifiedUserPayload);
     }
 
     @DeleteMapping("/{userId}")
@@ -71,20 +72,6 @@ public class UserController {
     public void getUserByIdAndDelete(@PathVariable UUID userId) {
         userService.deleteById(userId);
     }
-
-  /*  @GetMapping("/{email}/setAccepted")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public User putInAccepted(@PathVariable String email){
-        User user = userService.setAccepted(email);
-        emailSender.sendRegistrationEmailCurator(user);
-        return user;
-    }
-
-    @PostMapping("/sendEmailAdmin")
-    public FormDataResponseDTO sendEmailToAdmin(@RequestBody FormDataCuratorDTO formDataCuratorDTO){
-        emailSender.sendEmailToAdmin(formDataCuratorDTO, true);
-        return new FormDataResponseDTO(formDataCuratorDTO.email());
-    }*/
 
     @PostMapping("/{uuid}/avatar")
     public String uploadExample(@PathVariable UUID uuid, @RequestParam("avatar") MultipartFile body) throws IOException {

@@ -45,7 +45,7 @@ public class GalleryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public GalleryResponseDTO create(@RequestBody GalleryDTO artistUuid, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());

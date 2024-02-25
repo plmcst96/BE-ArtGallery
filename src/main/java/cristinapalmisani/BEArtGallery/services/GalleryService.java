@@ -34,7 +34,6 @@ public class GalleryService {
     }
 
     @Transactional
-
     public Page<Gallery> getGallery(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         return galleryDAO.findAll(pageable);

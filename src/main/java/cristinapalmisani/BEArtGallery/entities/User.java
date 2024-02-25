@@ -19,7 +19,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @ToString
-@JsonIgnoreProperties({"password", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
+@JsonIgnoreProperties({"authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
@@ -34,6 +34,9 @@ public class User implements UserDetails {
     private Role role;
     private boolean accepted;
 
+    @OneToOne(mappedBy = "user")
+    @JsonIgnore
+    private Location location;
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     @JsonIgnore

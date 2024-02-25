@@ -21,7 +21,7 @@ public class Gallery {
 
     @OneToOne
     @JoinColumn(name = "artist_id")
-
+    @JsonIgnore
     private Artist artist;
     @OneToMany
     @JoinColumn(name = "artistWork_id")

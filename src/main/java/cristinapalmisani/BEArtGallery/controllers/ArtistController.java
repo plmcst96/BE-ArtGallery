@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class ArtistController {
 
     @GetMapping
     public Page<Artist> getArtist(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "10") int size,
+                                  @RequestParam(defaultValue = "15") int size,
                                   @RequestParam(defaultValue = "uuid") String orderBy) {
         return artistService.getArtist(page, size, orderBy);
     }
@@ -50,7 +51,7 @@ public class ArtistController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ArtistResponseDTO create(@RequestBody @Validated ArtistDTO artist, BindingResult validation) {
         if(validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
@@ -60,6 +61,8 @@ public class ArtistController {
             return new ArtistResponseDTO(newArtist.getUuid());
         }
     }
+
+    @Transactional
     @PostMapping("/{uuid}/image")
     public String uploadExample(@PathVariable UUID uuid, @RequestParam("image") MultipartFile body) throws IOException {
         return artistService.uploadPicture(uuid, body);

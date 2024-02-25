@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,13 +46,6 @@ public class UserService {
         userDAO.delete(user);
     }
 
-    public User findByIdAndUpdate(UUID id, UserDTO body) {
-        User user = this.findById(id);
-        user.setEmail(body.email());
-        user.setName(body.name());
-        user.setSurname(body.surname());
-        return userDAO.save(user);
-    }
 
     public User setAccepted(String email){
         User curator = userDAO.findByEmail(email).orElseThrow(()-> new NotFoundException("Invalid email"));

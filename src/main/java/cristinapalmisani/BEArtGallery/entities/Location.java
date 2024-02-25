@@ -26,6 +26,10 @@ public class Location {
     private String museumName;
 
     @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+    @OneToOne
     @JoinColumn(name = "artist_work_id")
     @JsonIgnore
     private ArtistWork artistWork;
