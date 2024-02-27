@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "events")
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -22,6 +22,8 @@ public class Event extends GeneralAttribute{
     private LocalDate date;
     private TypeEvent typeEvent;
     private double amount;
+    @Column(name = "max_num", nullable = false, columnDefinition = "bigint default 0")
+    private Long maxNum;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -34,6 +36,10 @@ public class Event extends GeneralAttribute{
         this.date = date;
         this.typeEvent = typeEvent;
         this.amount = amount;
+    }
+
+    public Event() {
+        this.tickets = new ArrayList<>();
     }
 
 

@@ -25,6 +25,7 @@ public class Ticket {
     @Column(name = "image_PDF")
     private String imageDoc;
 
+
     private String hour;
     @Enumerated(EnumType.STRING)
     @Column(name = "type_ticket")
