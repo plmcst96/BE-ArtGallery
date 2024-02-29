@@ -7,10 +7,7 @@ import com.stripe.model.AccountSession;
 import com.stripe.model.Customer;
 import com.stripe.model.CustomerSession;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.AccountCreateParams;
-import com.stripe.param.AccountSessionCreateParams;
-import com.stripe.param.CustomerCreateParams;
-import com.stripe.param.CustomerSessionCreateParams;
+import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionCreateParams.LineItem;
 import cristinapalmisani.BEArtGallery.entities.TypeTicket;
@@ -23,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -44,7 +42,7 @@ public class CheckoutController {
         AccountCreateParams params =
                 AccountCreateParams.builder()
                         .setType(AccountCreateParams.Type.CUSTOM)
-                        .setCountry("US")
+                        .setCountry("IT")
                         .setEmail(email)
                         .setCapabilities(
                                 AccountCreateParams.Capabilities.builder()
@@ -64,15 +62,16 @@ public class CheckoutController {
 
 
 
+
         return Account.create(params);
     }
 
     @PostMapping("/account_sessions")
-    public AccountSession createAccountSession(@RequestBody String account) throws StripeException {
+    public Map<String, String> createAccountSession() throws StripeException {
         Stripe.apiKey = stripeApiKey;
         AccountSessionCreateParams params =
                 AccountSessionCreateParams.builder()
-                        .setAccount(account)
+                        .setAccount("acct_1OpE6EGdEX4MceIb")
                         .setComponents(
                                 AccountSessionCreateParams.Components.builder()
                                         .setAccountOnboarding(
@@ -84,8 +83,29 @@ public class CheckoutController {
                         )
                         .build();
 
+        AccountSession accountSession = AccountSession.create(params);
 
-        return AccountSession.create(params);
+
+        // Accetta i termini di Stripe per l'account
+        Account resource = Account.retrieve("acct_1OpE6EGdEX4MceIb");
+        AccountUpdateParams updateParams = AccountUpdateParams.builder()
+                .setTosAcceptance(
+                        AccountUpdateParams.TosAcceptance.builder()
+                                .setDate(Instant.now().getEpochSecond())
+                                .setIp("79.9.7.70")  // L'IP può essere ottenuto dal client se necessario
+                                .build()
+                )
+                .build();
+        resource.update(updateParams);
+
+        // Ottieni il client secret dalla sessione di account
+
+
+        // Restituisci i dettagli della sessione di account insieme al client secret
+        Map<String, String> response = new HashMap<>();
+        response.put("accountSessionId", accountSession.getAccount());
+        response.put("clientSecret", accountSession.getClientSecret());
+        return response;
     }
 
     @PostMapping("/create-checkout-session")
@@ -99,8 +119,6 @@ public class CheckoutController {
         String date = checkoutRequest.date();
         String hour = checkoutRequest.hour();
         String image = checkoutRequest.image();
-        String email = checkoutRequest.email();
-        String name = checkoutRequest.name();
         Map<String, Long> typeTicket = checkoutRequest.typeTicket();
 
 
@@ -114,13 +132,14 @@ public class CheckoutController {
                 .setSuccessUrl("http://localhost:5173/success")
                 .setCancelUrl("http://localhost:5173/cancel")
                 .addAllLineItem(lineItems)
+
                 .build();
         try {
             Session session = Session.create(params);
             // Restituisci il clientSecret e l'URL di checkout
             Map<String, String> response = new HashMap<>();
             response.put("clientSecret", session.getClientSecret());
-            System.out.println("clientsecert " + session.getClientSecret());
+            System.out.println("clientSecret " + session.getClientSecret());
             response.put("checkoutUrl", session.getUrl());
             return response;
         } catch (StripeException e) {

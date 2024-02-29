@@ -8,9 +8,8 @@ public record CheckoutRequestDTO (String title,
                                   double amount,
                                   long maxNum,
                                   String hour,
-                                  Map<String, Long> typeTicket,
-                                  String email,
-                                  String name) {
+                                  Map<String, Long> typeTicket
+                                ) {
 
 
 
