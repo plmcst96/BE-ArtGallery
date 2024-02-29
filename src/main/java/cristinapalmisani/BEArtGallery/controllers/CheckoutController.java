@@ -2,8 +2,15 @@ package cristinapalmisani.BEArtGallery.controllers;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Account;
+import com.stripe.model.AccountSession;
 import com.stripe.model.Customer;
+import com.stripe.model.CustomerSession;
 import com.stripe.model.checkout.Session;
+import com.stripe.param.AccountCreateParams;
+import com.stripe.param.AccountSessionCreateParams;
+import com.stripe.param.CustomerCreateParams;
+import com.stripe.param.CustomerSessionCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.param.checkout.SessionCreateParams.LineItem;
 import cristinapalmisani.BEArtGallery.entities.TypeTicket;
@@ -25,11 +32,63 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-@RequestMapping("/create-checkout-session")
+@RequestMapping("/v1")
 public class CheckoutController {
     @Value("${stripe.apikey}")
     private String stripeApiKey;
-    @PostMapping
+
+
+    @PostMapping("/accounts")
+    public Account createAccount (@RequestBody String email) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+        AccountCreateParams params =
+                AccountCreateParams.builder()
+                        .setType(AccountCreateParams.Type.CUSTOM)
+                        .setCountry("US")
+                        .setEmail(email)
+                        .setCapabilities(
+                                AccountCreateParams.Capabilities.builder()
+                                        .setCardPayments(
+                                                AccountCreateParams.Capabilities.CardPayments.builder()
+                                                        .setRequested(true)
+                                                        .build()
+                                        )
+                                        .setTransfers(
+                                                AccountCreateParams.Capabilities.Transfers.builder()
+                                                        .setRequested(true)
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .build();
+
+
+
+        return Account.create(params);
+    }
+
+    @PostMapping("/account_sessions")
+    public AccountSession createAccountSession(@RequestBody String account) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+        AccountSessionCreateParams params =
+                AccountSessionCreateParams.builder()
+                        .setAccount(account)
+                        .setComponents(
+                                AccountSessionCreateParams.Components.builder()
+                                        .setAccountOnboarding(
+                                                AccountSessionCreateParams.Components.AccountOnboarding.builder()
+                                                        .setEnabled(true)
+                                                        .build()
+                                        )
+                                        .build()
+                        )
+                        .build();
+
+
+        return AccountSession.create(params);
+    }
+
+    @PostMapping("/create-checkout-session")
     public Map<String, String> createCheckoutSession(@RequestBody CheckoutRequestDTO checkoutRequest) throws StripeException {
         // Imposta la chiave API di Stripe
         Stripe.apiKey = stripeApiKey;
@@ -44,11 +103,6 @@ public class CheckoutController {
         String name = checkoutRequest.name();
         Map<String, Long> typeTicket = checkoutRequest.typeTicket();
 
-        // Crea il cliente in Stripe
-        Map<String, Object> customerParams = new HashMap<>();
-        customerParams.put("email", email);
-        customerParams.put("name", name);
-        Customer customer = Customer.create(customerParams);
 
         // Calcola gli elementi di linea per il checkout
         List<SessionCreateParams.LineItem> lineItems = buildLineItems(title, image ,date, amount,maxNum, hour,typeTicket);
@@ -59,7 +113,6 @@ public class CheckoutController {
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl("http://localhost:5173/success")
                 .setCancelUrl("http://localhost:5173/cancel")
-                .setCustomer(customer.getId())
                 .addAllLineItem(lineItems)
                 .build();
         try {
