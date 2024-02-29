@@ -1,7 +1,5 @@
 package cristinapalmisani.BEArtGallery.payloads.ticket;
-
-import java.util.List;
-
+import java.util.Map;
 
 
 public record CheckoutRequestDTO (String title,
@@ -10,7 +8,9 @@ public record CheckoutRequestDTO (String title,
                                   double amount,
                                   long maxNum,
                                   String hour,
-                                   List<TypeTicketDTO> typeTicket) {
+                                  Map<String, Long> typeTicket,
+                                  String email,
+                                  String name) {
 
 
 
