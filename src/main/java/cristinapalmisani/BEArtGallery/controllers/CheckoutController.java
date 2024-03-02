@@ -71,7 +71,7 @@ public class CheckoutController {
         Stripe.apiKey = stripeApiKey;
         AccountSessionCreateParams params =
                 AccountSessionCreateParams.builder()
-                        .setAccount("acct_1OpE6EGdEX4MceIb")
+                        .setAccount("acct_1OpGUQGg7v071X5F")
                         .setComponents(
                                 AccountSessionCreateParams.Components.builder()
                                         .setAccountOnboarding(
@@ -87,7 +87,7 @@ public class CheckoutController {
 
 
         // Accetta i termini di Stripe per l'account
-        Account resource = Account.retrieve("acct_1OpE6EGdEX4MceIb");
+        Account resource = Account.retrieve("acct_1OpGUQGg7v071X5F");
         AccountUpdateParams updateParams = AccountUpdateParams.builder()
                 .setTosAcceptance(
                         AccountUpdateParams.TosAcceptance.builder()
@@ -110,6 +110,10 @@ public class CheckoutController {
 
     @PostMapping("/create-checkout-session")
     public Map<String, String> createCheckoutSession(@RequestBody CheckoutRequestDTO checkoutRequest) throws StripeException {
+
+        // Effettua la richiesta per ottenere il clientSecret
+        Map<String, String> accountSessionResponse = createAccountSession();
+        String clientSecret = accountSessionResponse.get("clientSecret");
         // Imposta la chiave API di Stripe
         Stripe.apiKey = stripeApiKey;
 
@@ -132,15 +136,16 @@ public class CheckoutController {
                 .setSuccessUrl("http://localhost:5173/success")
                 .setCancelUrl("http://localhost:5173/cancel")
                 .addAllLineItem(lineItems)
-
                 .build();
         try {
             Session session = Session.create(params);
             // Restituisci il clientSecret e l'URL di checkout
             Map<String, String> response = new HashMap<>();
-            response.put("clientSecret", session.getClientSecret());
+            response.put("clientSecret", clientSecret);
             System.out.println("clientSecret " + session.getClientSecret());
             response.put("checkoutUrl", session.getUrl());
+            response.put("sessionId", session.getId());
+
             return response;
         } catch (StripeException e) {
             log.error("Errore durante la creazione della sessione di checkout: {}", e.getMessage());
