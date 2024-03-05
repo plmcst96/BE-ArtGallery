@@ -17,3 +17,10 @@ This project was developed using **Java Spring Boot v.3.2.2** and **Maven** with
    - To use this project, it's necessary have a Cloudinary account and Stripe account
    - Run the project
      -- To view API documentation, import the `api_doc.yaml` file into Postman --
+
+## 🖊️ Author
+
+Cristina Palmisani 👩🏼‍🎨👩🏽‍💻
+
+🧑‍💻 [LinkedIn](https://www.linkedin.com/in/cristina-palmisani-fullstack-developer/)
+
